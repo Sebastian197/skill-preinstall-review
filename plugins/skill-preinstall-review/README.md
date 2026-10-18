@@ -49,6 +49,15 @@ is used, Claude runs `scripts/review.py`, which:
   container is removed when the run ends;
 - writes `report.md` and `report.json` to a local directory.
 
+**About the credential names in the source.** `sandbox/runner.py` mentions
+`ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `AWS_SECRET_ACCESS_KEY`, SSH key paths
+and similar. These are decoys: random canary values generated inside the
+container at review time and planted there so the review can see whether
+the package under test tries to steal them. The plugin's code never reads
+the user's own credential variables or credential files, and none of these
+values exist outside the container. (`git clone` uses your normal git setup
+for the repository you ask it to review, as any clone does.)
+
 It sends nothing anywhere: no telemetry, no uploads. The container has no
 network, and nothing from your machine is mounted into it; the reviewed
 package is passed in as a tar stream.
