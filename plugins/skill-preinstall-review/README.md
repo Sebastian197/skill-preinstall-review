@@ -78,6 +78,13 @@ VM or the Linux host.
 
 Source, tests and details: https://github.com/Sebastian197/skill-preinstall-review
 
+## Reporting a security problem
+
+Report vulnerabilities privately through GitHub's **Report a vulnerability**
+button: https://github.com/Sebastian197/skill-preinstall-review/security/advisories/new
+See [SECURITY.md](https://github.com/Sebastian197/skill-preinstall-review/blob/main/SECURITY.md)
+for what is in scope.
+
 ## License
 
 Apache-2.0
