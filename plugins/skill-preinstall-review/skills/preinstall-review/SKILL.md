@@ -19,11 +19,10 @@ did.
 1. **Do not install anything yet.** Get the source: a local directory or a
    git URL. If the user only gave a marketplace name, ask for its repository.
 
-2. **Run the review script.** It lives in `scripts/review.py` inside this
-   skill's base directory:
+2. **Run the review script**, which ships with this skill:
 
    ```bash
-   python3 <skill-base-dir>/scripts/review.py <path-or-git-url> --out <report-dir>
+   python3 "${CLAUDE_SKILL_DIR}/scripts/review.py" <path-or-git-url> --out <report-dir>
    ```
 
    Pick a report directory outside the candidate, for example

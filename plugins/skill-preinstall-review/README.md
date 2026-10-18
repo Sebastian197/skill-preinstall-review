@@ -9,6 +9,12 @@ and the evidence behind it.
 **Claude Code only.** The review needs a local shell, Python 3 and Docker,
 so it does not run on claude.ai or in Cowork.
 
+**It runs code on your machine when you ask for a review.** The plugin has
+no hooks, MCP servers or background processes, so nothing runs on install or
+on its own. When you ask for a review, Claude runs the bundled script
+(with your permission), and that script runs the package under review
+inside a Docker container.
+
 ## How to use it
 
 Ask before installing something, for example: "review this plugin before I
