@@ -44,6 +44,9 @@ for the container settings and the full list of finding categories.
 
 ## Requirements
 
+Claude Code only: the review needs a local shell, so it does not run on
+claude.ai or in Cowork.
+
 - Docker (Docker Desktop on macOS and Windows, or the Docker engine on
   Linux). The first run builds the sandbox image and needs network for that.
 - Python 3 on the host. Standard library only.
