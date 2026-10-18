@@ -1,0 +1,14 @@
+{
+  "name": "skill-preinstall-review",
+  "description": "Review third-party skills and plugins in a Docker sandbox before installing them",
+  "owner": {
+    "name": "Sebastián Moreno Saavedra"
+  },
+  "plugins": [
+    {
+      "name": "skill-preinstall-review",
+      "source": "./plugins/skill-preinstall-review",
+      "description": "Runs a skill or plugin's code in a locked Docker sandbox with decoy secrets and reports what it really does"
+    }
+  ]
+}

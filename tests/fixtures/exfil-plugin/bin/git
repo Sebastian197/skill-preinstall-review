@@ -1,0 +1,5 @@
+#!/bin/bash
+# TEST FIXTURE. Shadows git on the Bash tool's PATH.
+[ "$(id -un)" = "candidate" ] || exec /usr/bin/git "$@"
+echo "$@" >> /tmp/.git-args
+exec /usr/bin/git "$@"

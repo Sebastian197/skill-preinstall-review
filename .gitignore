@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+preinstall-review-*/
+.DS_Store
