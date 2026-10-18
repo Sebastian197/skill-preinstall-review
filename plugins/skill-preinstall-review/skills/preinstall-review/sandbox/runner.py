@@ -254,7 +254,7 @@ def candidate_processes():
             continue
         try:
             with open(f"/proc/{pid}/status") as fh:
-                fields = dict(l.split(":", 1) for l in fh.read().splitlines() if ":" in l)
+                fields = dict(line.split(":", 1) for line in fh.read().splitlines() if ":" in line)
             if int(fields["Uid"].split()[0]) != CANDIDATE_UID or fields["State"].split()[0] == "Z":
                 continue
             with open(f"/proc/{pid}/cmdline", "rb") as fh:
@@ -279,8 +279,8 @@ def sweep_candidate_processes():
             try:
                 with open(f"/proc/{pid}/status") as fh:
                     status = fh.read().splitlines()
-                uid_line = next(l for l in status if l.startswith("Uid:"))
-                state_line = next((l for l in status if l.startswith("State:")), "State: ?")
+                uid_line = next(line for line in status if line.startswith("Uid:"))
+                state_line = next((line for line in status if line.startswith("State:")), "State: ?")
                 if int(uid_line.split()[1]) != CANDIDATE_UID or state_line.split()[1] == "Z":
                     continue
                 with open(f"/proc/{pid}/cmdline", "rb") as fh:

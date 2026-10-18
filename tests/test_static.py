@@ -70,7 +70,8 @@ class StaticInventoryTest(unittest.TestCase):
         self.assertIn(("remote_bundle", "high"), categories(notes))
 
     def test_marketplace_entry_escaping_root_is_flagged(self):
-        import json, tempfile
+        import json
+        import tempfile
         with tempfile.TemporaryDirectory() as tmp:
             os.makedirs(os.path.join(tmp, ".claude-plugin"))
             with open(os.path.join(tmp, ".claude-plugin", "marketplace.json"), "w") as fh:

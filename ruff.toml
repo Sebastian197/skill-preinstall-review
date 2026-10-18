@@ -1,0 +1,7 @@
+# Lint for real defects (pyflakes, pycodestyle errors, bugbear), not style.
+line-length = 130
+target-version = "py39"
+
+[lint]
+select = ["E", "F", "W", "B"]
+ignore = ["E501"]

@@ -163,7 +163,7 @@ def run_sandbox(tag, payload, nonce, timeout, n_entries):
     except subprocess.TimeoutExpired:
         subprocess.run(["docker", "kill", name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         proc.communicate()
-        raise SystemExit(f"error: sandbox exceeded its {budget}s budget and was killed")
+        raise SystemExit(f"error: sandbox exceeded its {budget}s budget and was killed") from None
     marker = f"SPR-RESULT {nonce} ".encode()
     for line in out[:MAX_OUTPUT].splitlines():
         if line.startswith(marker):
