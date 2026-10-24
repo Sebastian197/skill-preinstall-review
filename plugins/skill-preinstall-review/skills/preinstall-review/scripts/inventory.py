@@ -164,8 +164,12 @@ def detect_targets(root):
                                             source=source))
                 elif os.path.isdir(path):
                     roots.append((name, path))
+                else:
+                    findings.append(finding("medium", "missing_source",
+                                            f"Marketplace entry '{name}' points to a directory that is not in the repository",
+                                            "Nothing was reviewed for this entry.", source=source))
             else:
-                findings.append(finding("info", "remote_source",
+                findings.append(finding("medium", "remote_source",
                                         f"Marketplace entry '{name}' is fetched from elsewhere and was not reviewed",
                                         "Review that source on its own before installing it.",
                                         source=source))
@@ -513,9 +517,15 @@ def entry_points(root, comps, entries):
                          "kind": "skill_command", "autorun": True,
                          "argv": ["bash", "-c", substitute(command)], "stdin": ""})
 
+    # Code that runs on its own goes first, so filler scripts cannot push it past the cap.
+    plan = [p for p in plan if p["autorun"]] + [p for p in plan if not p["autorun"]]
     if len(plan) > MAX_ENTRY_POINTS:
-        notes.append(finding("medium", "plan_truncated",
-                             f"{len(plan)} entry points found; only the first {MAX_ENTRY_POINTS} were run"))
+        dropped = plan[MAX_ENTRY_POINTS:]
+        severity = "high" if any(p["autorun"] for p in dropped) else "medium"
+        notes.append(finding(severity, "plan_truncated",
+                             f"{len(plan)} entry points found; only {MAX_ENTRY_POINTS} were run",
+                             "Entry points that run on their own were run first.",
+                             not_run=[p["label"] for p in dropped]))
         plan = plan[:MAX_ENTRY_POINTS]
     for kind in ("hook", "mcp", "lsp", "monitor", "skill_command"):
         auto = [p["label"] for p in plan if p["kind"] == kind and p["autorun"]]

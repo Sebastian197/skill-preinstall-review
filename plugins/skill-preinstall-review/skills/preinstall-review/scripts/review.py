@@ -32,6 +32,16 @@ SANDBOX_DIR = os.path.normpath(os.path.join(HERE, "..", "sandbox"))
 IMAGE_NAME = "preinstall-review-sandbox"
 MAX_INPUT = 300 * 1024 * 1024
 MAX_OUTPUT = 64 * 1024 * 1024
+IS_WINDOWS = os.name == "nt"
+# Findings that mean part of the candidate was never looked at.
+NOT_REVIEWED = ("remote_source", "missing_source", "remote_bundle", "remote_mcp", "plan_truncated")
+
+
+def tool_version():
+    manifest = inventory.load_json(os.path.join(HERE, "..", "..", "..", ".claude-plugin", "plugin.json"))
+    version = manifest.get("version") if isinstance(manifest, dict) else None
+    return version if isinstance(version, str) else "unknown"
+
 
 HOME = "/home/candidate"
 PROJECT = "/work/project"
@@ -376,6 +386,12 @@ def render_markdown(report):
     lines.append("> No finding is not the same as safe. The sandbox only sees what ran during this review; "
                  "see the limits section.")
     lines.append("")
+    if report["not_reviewed"]:
+        lines.append("## Not reviewed")
+        lines.append("")
+        for item in report["not_reviewed"]:
+            lines.append(f"- {item}")
+        lines.append("")
     for plugin in report["plugins"]:
         lines.append(f"## Declared: {plugin['name']}")
         manifest = plugin["manifest"]
@@ -408,7 +424,7 @@ def render_markdown(report):
         for p in s["files_read"][:10]:
             lines.append(f"  - read `{p}`")
     if not report["entries"]:
-        lines.append("Nothing was executed." if report["sandbox"] != "skipped" else "Sandbox skipped.")
+        lines.append("Sandbox skipped." if report["sandbox"].startswith("skipped") else "Nothing was executed.")
     lines.append("")
     lines.append("## Limits of this review")
     lines.append("")
@@ -454,6 +470,12 @@ def main(argv=None):
         sandbox_state = "skipped (--static-only)" if args.static_only else "docker"
         tag = None
         if not args.static_only:
+            if IS_WINDOWS:
+                print("error: the sandbox run is not supported on a Windows host yet: paths and execute bits do not "
+                      "survive the transfer, so entry points would fail to start and the report would miss them. "
+                      "Run the review from macOS, Linux or WSL, or pass --static-only for a static review "
+                      "(much weaker: it cannot see what the code does).", file=sys.stderr)
+                return 2
             if not docker_available():
                 print("error: Docker is not running. Start Docker, or pass --static-only for a static review "
                       "(much weaker: it cannot see what the code does).", file=sys.stderr)
@@ -484,10 +506,15 @@ def main(argv=None):
                     findings += f
                     summaries.append(s)
 
+        not_reviewed = [f["title"] for f in findings if f["category"] in NOT_REVIEWED]
+        if args.static_only:
+            not_reviewed.insert(0, "The sandbox did not run (--static-only): no code was executed, so its "
+                                   "behavior was not observed.")
         target_name = plugins[0]["name"] if len(plugins) == 1 else os.path.basename(os.path.abspath(root))
         report = {
-            "tool": "preinstall-review 0.1.0", "target": target_name, "source": args.source, "layout": layout,
-            "sandbox": sandbox_state, "reviewed_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "tool": f"preinstall-review {tool_version()}", "target": target_name, "source": args.source,
+            "layout": layout, "sandbox": sandbox_state, "reviewed_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "not_reviewed": not_reviewed,
             "plugins": plugins, "findings": sorted(findings, key=lambda f: SEVERITY_ORDER[f["severity"]]),
             "entries": summaries, "limits": LIMITS,
         }

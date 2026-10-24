@@ -69,6 +69,7 @@ class SandboxTest(unittest.TestCase):
 
     def test_benign_skill_is_quiet(self):
         self.assertEqual(self.benign["findings"], [])
+        self.assertEqual(self.benign["not_reviewed"], [])
         self.assertEqual(len(self.benign["entries"]), 1)
         self.assertEqual(self.benign["entries"][0]["exit_code"], 0)
 

@@ -1,7 +1,7 @@
 {
   "name": "skill-preinstall-review",
   "displayName": "Skill pre-install review",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Runs a skill or plugin's code in a locked Docker sandbox with decoy secrets and reports what it really does, before you install it",
   "author": {
     "name": "Sebastián Moreno Saavedra"

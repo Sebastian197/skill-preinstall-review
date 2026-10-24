@@ -7,7 +7,15 @@ you what the code actually did next to what it claims to do, with a verdict
 and the evidence behind it.
 
 **Claude Code only.** The review needs a local shell, Python 3 and Docker,
-so it does not run on claude.ai or in Cowork.
+so it does not run on claude.ai or in Cowork. It runs on macOS, Linux and
+WSL; on a Windows host the sandbox run is refused for now.
+
+## Install
+
+```text
+/plugin marketplace add Sebastian197/skill-preinstall-review
+/plugin install skill-preinstall-review@skill-preinstall-review
+```
 
 **It runs code on your machine when you ask for a review.** The plugin has
 no hooks, MCP servers or background processes, so nothing runs on install or
@@ -19,7 +27,8 @@ inside a Docker container.
 
 Ask before installing something, for example: "review this plugin before I
 install it: https://github.com/someone/some-plugin". You get a verdict (do
-not install, install after checking, or no problems observed), a table of
+not install, not reviewed, install after checking, or no problems
+observed), a table of
 declared versus observed behavior, and `report.md` / `report.json` with the
 full evidence. It never calls a package safe: anything the run did not
 trigger was not observed.

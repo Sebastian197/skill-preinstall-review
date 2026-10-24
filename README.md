@@ -47,8 +47,11 @@ for the container settings and the full list of finding categories.
 Claude Code only: the review needs a local shell, so it does not run on
 claude.ai or in Cowork.
 
-- Docker (Docker Desktop on macOS and Windows, or the Docker engine on
-  Linux). The first run builds the sandbox image and needs network for that.
+- Docker (Docker Desktop on macOS, or the Docker engine on Linux). The
+  first run builds the sandbox image and needs network for that.
+- macOS, Linux or WSL. On a Windows host the sandbox run is refused for now,
+  because paths and execute bits do not survive the transfer into the
+  container ([issue #1](https://github.com/Sebastian197/skill-preinstall-review/issues/1)).
 - Python 3 on the host. Standard library only.
 
 Tested on macOS 13 (Intel) with Docker Engine 20.10.22 and Python 3.11.

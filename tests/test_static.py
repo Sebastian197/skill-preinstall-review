@@ -82,7 +82,7 @@ class StaticInventoryTest(unittest.TestCase):
         self.assertEqual(layout, "marketplace")
         self.assertEqual(targets, [])
         self.assertIn(("path_escape", "high"), categories(findings))
-        self.assertIn(("remote_source", "info"), categories(findings))
+        self.assertIn(("remote_source", "medium"), categories(findings))
 
 
 if __name__ == "__main__":

@@ -31,7 +31,8 @@ did.
    10 to 20 seconds per entry point.
 
    If the script says Docker is not running, tell the user to start Docker
-   Desktop (or the Docker daemon) and retry. Offer `--static-only` only as an
+   Desktop (or the Docker daemon) and retry. On a Windows host the sandbox
+   run is refused; suggest running the review from WSL. Offer `--static-only` only as an
    explicit fallback, and say plainly that it cannot see what the code does,
    which is exactly what evasive packages exploit.
 
@@ -60,6 +61,12 @@ did.
      `persistence`, `destructive`, `path_shadowing`, `hidden_unicode`,
      `remote_hook` or `path_escape`, unless the evidence clearly shows a
      benign cause that matches the declared purpose (say which).
+   - **Not reviewed**: `not_reviewed` in `report.json` is not empty (the
+     sandbox was skipped, marketplace entries live elsewhere or are missing,
+     the plan was cut, code is fetched from a URL). Say which parts were not
+     reviewed and that nothing can be said about them; list any medium
+     findings too. Remote entries can be reviewed by running the script on
+     their own repositories.
    - **Install only after checking**: medium findings, or behavior the
      description does not mention. List exactly what the user should check.
    - **No problems observed**: nothing above. Never call a package "safe".

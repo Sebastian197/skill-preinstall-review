@@ -49,7 +49,15 @@ evidence is written, nor the runner's `/proc` entries.
 
 `${CLAUDE_PLUGIN_ROOT}`, `${CLAUDE_PLUGIN_DATA}` and `${CLAUDE_PROJECT_DIR}`
 are substituted with sandbox paths; `${user_config.*}` becomes a placeholder.
-At most 40 entry points run per plugin; the rest are listed as not run.
+At most 40 entry points run per plugin. Entry points that run on their own
+(hooks, MCP and LSP servers, monitors, ``!`command` `` lines) go first; the
+rest are listed as not run.
+
+`report.json` has a `not_reviewed` list: the sandbox skipped with
+`--static-only`, marketplace entries hosted elsewhere or missing from the
+repository, remote MCP servers and bundles, and entry points cut by the cap.
+The sandbox run is refused on a Windows host, because paths and execute bits
+do not survive the transfer into the container.
 
 ## Decoys
 
@@ -78,7 +86,9 @@ payloads, raw, hex or base64 at any alignment, is reported as exfiltration.
 | `hidden_unicode` | high/medium | static | Tag characters, bidi controls or zero-width characters |
 | `remote_hook`, `remote_bundle` | high | static | Data sent to, or code fetched from, a remote URL |
 | `path_escape`, `symlink` | high/info | static | Paths or links pointing outside the package |
+| `plan_truncated` | high/medium | static | Entry points not run because of the cap; high if one runs on its own |
 | `network` | medium | sandbox | DNS queries or connection attempts |
+| `remote_source`, `missing_source` | medium | static | Marketplace entry hosted elsewhere, or pointing to a directory that is not there; not reviewed |
 | `credential_probe` | medium | sandbox | Looked for credential files that do not exist |
 | `process_snooping` | medium | sandbox | Read another process's environment |
 | `suspicious_program` | medium | sandbox | Ran curl, wget, nc, ssh, base64, crontab, nohup... |
